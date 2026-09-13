@@ -3,13 +3,19 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 
+
+import Header from './components/Header.jsx'
+
+import HomePage from './pages/HomePage.jsx'
+
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <h1 className='text-3xl font-bold underline text-blue-600'>
-      Check;
-    </h1>
+    <div className="bg-slate-900 min-h-screen">
+      <Header />
+      <HomePage />
+    </div>
   )
 }
 
