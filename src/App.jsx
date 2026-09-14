@@ -9,6 +9,7 @@ import Header from './components/Header.jsx'
 
 import HomePage from './pages/HomePage.jsx'
 import PlayerVSComputer from './pages/PlayerVSComputer.jsx'
+import STT from './pages/STT.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
       <main className="flex-grow">
       <Routes location={location} key={location.pathname}>
       <Route path="/" element={<HomePage />} />
+      <Route path='/STT' element={<STT />} />
       <Route path="/player-vs-computer" element={<PlayerVSComputer />} />
       </Routes>
       </main>

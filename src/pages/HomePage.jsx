@@ -9,8 +9,8 @@ import Header from '../components/Header.jsx';
 export default function HomePage() {
 const navigate = useNavigate();
 
-const handleNavigation = () => {
-    navigate('/player-vs-computer');
+const handleNavigation = (path) => {
+    navigate(path);
 }
 
   return (
@@ -28,6 +28,7 @@ const handleNavigation = () => {
         <div className="flex flex-row gap-8 items-center justify-center flex-wrap mt-2">
             {/* Solo Typing Button */}
             <button 
+                onClick={() => handleNavigation('/STT')}
                 className="w-72 h-72 flex flex-col items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-cyan-500 rounded-2xl p-6 shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
             >
                 <div className="flex flex-col items-center justify-center h-full w-full">
@@ -46,7 +47,7 @@ const handleNavigation = () => {
 
             {/* Player vs Computer Button */}
             <button 
-                onClick={handleNavigation}
+                onClick={() => handleNavigation('/player-vs-computer')}
                 className="w-72 h-72 flex flex-col items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-cyan-500 rounded-2xl p-6 shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
             >
                 <div className="flex flex-col items-center justify-center h-full w-full">
