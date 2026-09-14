@@ -1,12 +1,14 @@
 import React from 'react';
 import keyboardImg from '../assets/keyboard.png';
 import pvc from '../assets/PVC.jpeg';
+import Transition from '../components/PageTransition.jsx';
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-5 items-center justify-center h-screen overflow-hidden bg-slate-900 px-4">
+    <Transition>
+    <div className="flex flex-col gap-5 items-center justify-center min-h-scren bg-slate-900 px-4 py-4">
         <h1>
-            <span className="text-4xl font-bold text-slate-100 tracking-wider">Welcome to KeyType</span>
+            <span className="font-bold text-slate-100 tracking-wider text-2xl sm:text-3xl md:text-4xl">Welcome to KeyType</span>
         </h1>
         
         <p className="text-lg text-slate-300 max-w-2xl text-center leading-relaxed">
@@ -51,5 +53,6 @@ export default function HomePage() {
             </button>
         </div>
     </div>
+    </Transition>
   );
 }
