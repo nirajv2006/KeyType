@@ -1,11 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import keyboardImg from '../assets/keyboard.png';
 import pvc from '../assets/PVC.jpeg';
 import Transition from '../components/PageTransition.jsx';
+import Header from '../components/Header.jsx';
+
 
 export default function HomePage() {
+const navigate = useNavigate();
+
+const handleNavigation = () => {
+    navigate('/player-vs-computer');
+}
+
   return (
     <Transition>
+        <Header />
     <div className="flex flex-col gap-5 items-center justify-center min-h-scren bg-slate-900 px-4 py-4">
         <h1>
             <span className="font-bold text-slate-100 tracking-wider text-2xl sm:text-3xl md:text-4xl">Welcome to KeyType</span>
@@ -36,6 +46,7 @@ export default function HomePage() {
 
             {/* Player vs Computer Button */}
             <button 
+                onClick={handleNavigation}
                 className="w-72 h-72 flex flex-col items-center justify-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-cyan-500 rounded-2xl p-6 shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
             >
                 <div className="flex flex-col items-center justify-center h-full w-full">
