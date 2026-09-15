@@ -17,8 +17,24 @@ export default function STT(){
                 {/* Main Content Area - Single Container with tight gaps */}
                 <main className="flex flex-col items-center justify-center gap-4 w-full max-w-4xl my-auto">
                     
-                    <div className="w-full h-12 flex items-center justify-between border-slate-700 border rounded-xl px-6 bg-slate-800/50 shadow-md">
-
+                    <div className="w-full h-12 flex items-center justify-center border-slate-700 border rounded-xl px-6 bg-slate-800/50 shadow-md gap-3">
+                        <button className="flex flex-row items-center justify-center text-slate-300 hover:text-cyan-400 transition-all duration-200 gap-4">
+                            <h1 className="text-slate-200 text-sm sm:text-lg md:text-xl font-semibold tracking-wider hover:text-cyan-400 transition-all duration-200 ">
+                                30s  
+                            </h1>
+                        </button>
+                            <span className="text-slate-300">|</span>
+                        <button>
+                            <h1 className="text-slate-200 text-sm sm:text-lg md:text-xl font-semibold tracking-wider hover:text-cyan-400 transition-all duration-200">
+                                45s
+                            </h1>
+                        </button>
+                            <span className="text-slate-300">|</span>
+                        <button>
+                            <h1 className="text-slate-200 text-sm sm:text-lg md:text-xl font-semibold tracking-wider hover:text-cyan-400 transition-all duration-200">
+                                60s
+                            </h1>
+                        </button>
                     </div>
 
                     {/* Subtitle Instructions */}
@@ -32,7 +48,9 @@ export default function STT(){
                     </div>
 
                     <div className="w-full h-36 flex items-center justify-center border-2 border-slate-700 bg-slate-800/40 rounded-2xl p-6 shadow-xl">
-                        {/* Typing words will be rendered here dynamically */}
+                        <p className="text-slate-300 text-sm sm:text-lg md:text-xl">
+                                The quick brown fox jumps over the lazy dog. Programming is the art of telling another human what one wants the computer to do. Practice makes progress, and consistency builds speed. Focus on accuracy first, and your typing rhythm will naturally improve over time.
+                        </p>
                     </div>
 
                 </main>
