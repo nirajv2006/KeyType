@@ -26,9 +26,16 @@ export default function STT() {
 
   return (
     <Transition>
-      <div className="flex flex-col items-center min-h-screen bg-slate-900 px-4 pb-8">
+      <div className=" min-h-screen bg-slate-900 px-4 pb-8">
         <Header />
 
+        <button
+        onClick={handleGoBack}
+        className="bg-slate-800 hover:bg-slate-700 text-slate-100 hover:text-cyan-500 rounded border border-5 border-slate-200 hover:border-cyan-500 rounded-xl p-2 shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
+        >
+          Go Back
+        </button>
+        <div className="flex flex-col items-center justify-center">
         {/* Main Content Area */}
         <main className="flex flex-col items-center justify-center gap-6 w-full max-w-4xl my-auto mt-8">
           
@@ -93,8 +100,8 @@ export default function STT() {
               })}
             </p>
           </div>
-
         </main>
+        </div>
       </div>
     </Transition>
   );
