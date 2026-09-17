@@ -30,7 +30,7 @@ export default function STT() {
         <Header />
 
         <button
-        onClick={handleGoBack}
+        onClick={() => handleGoBack()}
         className="bg-slate-800 hover:bg-slate-700 text-slate-100 hover:text-cyan-500 rounded border border-5 border-slate-200 hover:border-cyan-500 rounded-xl p-2 shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
         >
           Go Back
