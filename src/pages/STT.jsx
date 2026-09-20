@@ -10,15 +10,13 @@ export default function STT() {
     navigate("/");
   };
 
-  const targetText =
-    "The quick brown fox jumps over the lazy dog. Programming is the art of telling another human what one wants the computer to do. Practice makes progress, and consistency builds speed. Focus on accuracy first, and your typing rhythm will naturally improve over time.";
-
   // State & Ref for handling typing input and timer
   const [selectedDuration, setSelectedDuration] = useState(30);
   const [timeLeft, setTimeLeft] = useState(30);
   const [isStarted, setIsStarted] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
 
+  const [targetText,setTargetText] = useState("Loading words...");
   const [userInput, setUserInput] = useState("");
   const [finalStats, setFinalStats] = useState({
     wpm: 0,
@@ -32,6 +30,19 @@ export default function STT() {
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
   const userInputRef = useRef("");
+
+  const fetchNewWords = async () => {
+    try{
+      const response = await fetch("http://localhost:8000/api/words?count=125");
+      const data = await response.json();
+      setTargetText(data.text);
+      setUserInput("");
+    }catch(error){
+      console.error("Failed to connect : ",error);
+      setTargetText("failed to load text from server");
+    }
+  };
+  useEffect(() => {fetchNewWords();} , []);
 
   // Keep userInputRef updated with current typing
   useEffect(() => {
@@ -139,7 +150,19 @@ export default function STT() {
   const handleInputChange = (e) => {
     if (isFinished) return;
 
-    const val = e.target.value;
+    let val = e.target.value.toLowerCase();
+
+    // If a space was just pressed, automatically jump to the start of the next word
+    if (val.length > userInput.length && val.endsWith(" ")) {
+      const currentPos = userInput.length;
+      const nextSpaceIdx = targetText.indexOf(" ", currentPos);
+
+      if (nextSpaceIdx !== -1) {
+        // Pad with spaces or fill up through the space after current word
+        // This advances the cursor index to the beginning of the next word
+        val = val.slice(0, -1).padEnd(nextSpaceIdx + 1, " ");
+      }
+    }
 
     // Start timer on first keystroke
     if (!isStarted && val.length > 0) {
