@@ -12,7 +12,6 @@ export default function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Placeholder submit handling
         console.log({ email, password, rememberMe, isSignUp });
     };
 
@@ -121,4 +120,4 @@ export default function LoginPage() {
             </div>
         </Transition>
     );
-}
+}
