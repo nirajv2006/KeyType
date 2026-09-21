@@ -33,7 +33,7 @@ export default function STT() {
 
   const fetchNewWords = async () => {
     try{
-      const response = await fetch("http://localhost:8000/api/words?count=125");
+      const response = await fetch("http://localhost:8000/api/words?count=100");
       const data = await response.json();
       setTargetText(data.text);
       setUserInput("");
@@ -50,7 +50,7 @@ export default function STT() {
   }, [userInput]);
 
   // Reset test state
-  const resetTest = (duration = selectedDuration) => {
+  const resetTest = (duration = selectedDuration, fetchNew = true) => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -69,6 +69,9 @@ export default function STT() {
       incorrectChars: 0,
       totalChars: 0,
     });
+    if (fetchNew) {
+      fetchNewWords();
+    }
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
@@ -354,16 +357,22 @@ export default function STT() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 w-full">
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <button
-                  onClick={() => resetTest(selectedDuration)}
+                  onClick={() => resetTest(selectedDuration, true)}
                   className="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg cursor-pointer hover:scale-[1.02]"
                 >
-                  Try Again
+                  Next Test
+                </button>
+                <button
+                  onClick={() => resetTest(selectedDuration, false)}
+                  className="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-3 px-4 rounded-xl transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+                >
+                  Retry Same Words
                 </button>
                 <button
                   onClick={handleGoBack}
-                  className="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-3 px-4 rounded-xl transition-all duration-200 cursor-pointer hover:scale-[1.02]"
+                  className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold py-3 px-4 rounded-xl transition-all duration-200 cursor-pointer hover:scale-[1.02]"
                 >
                   Go Back
                 </button>

@@ -1,12 +1,18 @@
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.ext.declarative import declarative_base
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
-Base = declarative_base()
+#this is what react sends to POST /api/tests
+class TestCreate(BaseModel):
+    wpm: float
+    rwpm:Optional[float] = None
+    accuracy: float
+    duration: int
 
-class users(Base):
+#this is what fast api returns back to the React
+class TestResponse(TestCreate):
+    id: int
+    created_at: datetime
 
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True , index=True)
-    username= Column(String)
-    email = Column(String)
+    class Config:
+        from_attributes = True
