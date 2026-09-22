@@ -188,6 +188,30 @@ export default function STT() {
     }
   };
 
+  const saveTestResults = async(wpm, rwpm, accuracy, duration) =>{
+    try{
+      const response = await fetch("http://localhost:8000/api/tests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          wpm: wpm,
+          rwpm: rwpm,
+          accuracy: accuracy,
+          duration: duration,
+        }),
+      });
+
+      if(response.ok){
+        const data = await response.json();
+        console.log("Test Saved with ID:", data.id)
+      }
+    } catch(error){
+      console.error("Failed to save test results:")
+    }
+  };
+
   return (
     <Transition>
       <div className="relative min-h-screen bg-slate-900 px-4 pb-8">
