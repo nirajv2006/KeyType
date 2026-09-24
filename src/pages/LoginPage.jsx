@@ -2,17 +2,56 @@ import React, { useState } from "react";
 import Header from '../components/Header';
 import Transition from '../components/PageTransition';
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
 
-    const handleSubmit = (e) => {
+    const [errorMsg, setErrorMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ email, password, rememberMe, isSignUp });
+        setErrorMsg("");
+        setIsLoading(true);
+
+        const endpoint = isSignUp
+        ? `${API_BASE_URL}/api/auth/register`
+        : `${API_BASE_URL}/api/auth/login`;
+
+        try{
+            const response = await fetch(endpoint, {
+                method:"POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                }),
+            });
+            const data = await response.json();
+            if(!response.ok){
+                throw new Error(data.detail || "Authentication failed");
+            }
+            if(isSignUp){
+                setIsSignUp(false);
+                setErrorMsg("");
+                alert("Account created successfully!");
+            }else{
+                localStorage.setItem("token", data.access_token);
+                navigate("/");
+            }
+        }catch(err){
+            setErrorMsg(err.message);
+        }finally{
+            setIsLoading(false);
+        }
     };
 
     return (

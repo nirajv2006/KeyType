@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Transition from "../components/PageTransition.jsx";
 import Header from "../components/Header.jsx";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 export default function STT() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function STT() {
   const [isStarted, setIsStarted] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
 
-  const [targetText,setTargetText] = useState("Loading words...");
+  const [targetText, setTargetText] = useState("Loading words...");
   const [userInput, setUserInput] = useState("");
   const [finalStats, setFinalStats] = useState({
     wpm: 0,
@@ -32,17 +33,17 @@ export default function STT() {
   const userInputRef = useRef("");
 
   const fetchNewWords = async () => {
-    try{
-      const response = await fetch("http://localhost:8000/api/words?count=100");
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/words?count=100`);
       const data = await response.json();
       setTargetText(data.text);
       setUserInput("");
-    }catch(error){
-      console.error("Failed to connect : ",error);
+    } catch (error) {
+      console.error("Failed to connect : ", error);
       setTargetText("failed to load text from server");
     }
   };
-  useEffect(() => {fetchNewWords();} , []);
+  useEffect(() => { fetchNewWords(); }, []);
 
   // Keep userInputRef updated with current typing
   useEffect(() => {
@@ -116,13 +117,18 @@ export default function STT() {
     const calculatedAccuracy =
       totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
 
+    const finalWpm = Math.max(0, calculatedWpm);
+    const finalAccuracy = Math.max(0, calculatedAccuracy);
+
     setFinalStats({
-      wpm: Math.max(0, calculatedWpm),
-      accuracy: Math.max(0, calculatedAccuracy),
+      wpm: finalWpm,
+      accuracy: finalAccuracy,
       correctChars,
       incorrectChars,
       totalChars,
     });
+
+    saveTestResults(finalWpm, finalWpm, finalAccuracy, elapsedSeconds);
   };
 
   // Timer countdown management
@@ -188,13 +194,19 @@ export default function STT() {
     }
   };
 
-  const saveTestResults = async(wpm, rwpm, accuracy, duration) =>{
-    try{
-      const response = await fetch("http://localhost:8000/api/tests", {
+  const saveTestResults = async (wpm, rwpm, accuracy, duration) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json"
+      };
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/tests`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers,
         body: JSON.stringify({
           wpm: wpm,
           rwpm: rwpm,
@@ -203,12 +215,12 @@ export default function STT() {
         }),
       });
 
-      if(response.ok){
+      if (response.ok) {
         const data = await response.json();
-        console.log("Test Saved with ID:", data.id)
+        console.log("Test Saved with ID:", data.id);
       }
-    } catch(error){
-      console.error("Failed to save test results:")
+    } catch (error) {
+      console.error("Failed to save test results:", error);
     }
   };
 
@@ -229,9 +241,8 @@ export default function STT() {
           <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2">
             <span className="text-slate-400 text-sm font-medium">Time Remaining:</span>
             <span
-              className={`text-lg font-mono font-bold ${
-                timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-cyan-400"
-              }`}
+              className={`text-lg font-mono font-bold ${timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-cyan-400"
+                }`}
             >
               {timeLeft}s
             </span>
@@ -241,7 +252,7 @@ export default function STT() {
         <div className="flex flex-col items-center justify-center">
           {/* Main Content Area */}
           <main className="flex flex-col items-center justify-center gap-6 w-full max-w-4xl my-auto mt-4">
-            
+
             {/* Status / Timer Selector Bar - disappears once typing starts */}
             {!isStarted && (
               <div className="w-full h-12 flex items-center justify-center border-slate-700 border rounded-xl px-6 bg-slate-800/50 shadow-md gap-4 transition-all duration-300">
@@ -250,11 +261,10 @@ export default function STT() {
                     {index > 0 && <span className="text-slate-600">|</span>}
                     <button
                       onClick={() => handleDurationChange(dur)}
-                      className={`cursor-pointer text-sm sm:text-base font-semibold tracking-wider transition-all duration-200 px-3 py-1 rounded-lg ${
-                        selectedDuration === dur
+                      className={`cursor-pointer text-sm sm:text-base font-semibold tracking-wider transition-all duration-200 px-3 py-1 rounded-lg ${selectedDuration === dur
                           ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-sm"
                           : "text-slate-300 hover:text-cyan-400 hover:bg-slate-700/50"
-                      }`}
+                        }`}
                     >
                       {dur}s
                     </button>
@@ -276,9 +286,8 @@ export default function STT() {
             {/* Typing Container */}
             <div
               onClick={handleContainerClick}
-              className={`relative w-full min-h-[190px] flex items-start justify-start border-2 bg-slate-800/40 rounded-2xl p-6 shadow-xl cursor-text overflow-hidden transition-all duration-200 ${
-                isFinished ? "opacity-40 pointer-events-none border-slate-700" : "border-slate-700 hover:border-slate-600"
-              }`}
+              className={`relative w-full min-h-[190px] flex items-start justify-start border-2 bg-slate-800/40 rounded-2xl p-6 shadow-xl cursor-text overflow-hidden transition-all duration-200 ${isFinished ? "opacity-40 pointer-events-none border-slate-700" : "border-slate-700 hover:border-slate-600"
+                }`}
             >
               {/* Invisible Input capturing keypresses */}
               <input
