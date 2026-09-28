@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.database import get_db
-from app.models import TypingTest, User
-from app.schemas import TestCreate, TestResponse
+from database import get_db
+from models import TypingTest, User
+from schemas import TestCreate, TestResponse
 from sqlalchemy.orm import Session
-from app.auth_utils import get_current_user_optional
+from auth_utils import get_current_user_optional
 
 router = APIRouter(
     prefix="/api/tests",

@@ -1,14 +1,14 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import session, engine, Base
+from database import session, engine, Base
 from sqlalchemy.orm import Session
-from app.routers import tests, auth
-from app import schemas
+from routers import tests, auth
+import schemas
 import json
 import random
 from pathlib import Path
 
-from app.config import settings
+from config import settings
 
 app = FastAPI()
 app.include_router(tests.router)
