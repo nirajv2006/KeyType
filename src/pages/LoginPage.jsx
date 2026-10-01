@@ -45,6 +45,7 @@ export default function LoginPage() {
                 alert("Account created successfully!");
             }else{
                 localStorage.setItem("token", data.access_token);
+                localStorage.setItem("username", username);
                 navigate("/");
             }
         }catch(err){
@@ -69,6 +70,12 @@ export default function LoginPage() {
                                 : "Sign in to access your KeyType account"}
                         </p>
                     </div>
+
+                    {errorMsg && (
+                        <div className="mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 text-sm text-center">
+                            {errorMsg}
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
@@ -124,9 +131,10 @@ export default function LoginPage() {
 
                         <button
                             type="submit"
-                            className="w-full py-3 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 cursor-pointer active:scale-[0.99]"
+                            disabled={isLoading}
+                            className={`w-full py-3 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 cursor-pointer active:scale-[0.99] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
-                            {isSignUp ? "Sign Up" : "Sign In"}
+                            {isLoading ? "Please wait..." : (isSignUp ? "Sign Up" : "Sign In")}
                         </button>
                     </form>
 

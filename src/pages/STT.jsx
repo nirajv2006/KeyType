@@ -31,6 +31,7 @@ export default function STT() {
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
   const userInputRef = useRef("");
+  const isFinishedRef = useRef(false);
 
   const fetchNewWords = async () => {
     try {
@@ -56,6 +57,7 @@ export default function STT() {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+    isFinishedRef.current = false;
     startTimeRef.current = null;
     userInputRef.current = "";
     setUserInput("");
@@ -87,6 +89,9 @@ export default function STT() {
 
   // Finish the test and calculate final metrics accurately
   const finishTest = (inputVal = userInputRef.current) => {
+    if (isFinishedRef.current) return;
+    isFinishedRef.current = true;
+
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -139,7 +144,6 @@ export default function STT() {
           if (prev <= 1) {
             clearInterval(timerRef.current);
             timerRef.current = null;
-            finishTest(userInputRef.current);
             return 0;
           }
           return prev - 1;
@@ -154,6 +158,13 @@ export default function STT() {
       }
     };
   }, [isStarted, isFinished]);
+
+  // When timer reaches 0, finish test safely outside state updater
+  useEffect(() => {
+    if (isStarted && !isFinished && timeLeft === 0) {
+      finishTest(userInputRef.current);
+    }
+  }, [timeLeft, isStarted, isFinished]);
 
   // Handle typing input
   const handleInputChange = (e) => {
